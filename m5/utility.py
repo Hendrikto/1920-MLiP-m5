@@ -1,3 +1,9 @@
+from zipfile import (
+    ZIP_DEFLATED,
+    ZipFile,
+)
+
+import numpy as np
 import pandas as pd
 
 calendar_dtypes = {
@@ -46,3 +52,9 @@ def read_calendar(path):
 
 def read_sales_data(path):
     return pd.read_csv(path, dtype=sales_data_dtypes)
+
+
+def save_arrays(path, **kwargs):
+    with ZipFile(path, 'w', compression=ZIP_DEFLATED) as zip_file, \
+            zip_file.open('data.npz', 'w') as npz_file:
+        np.savez_compressed(npz_file, **kwargs)
