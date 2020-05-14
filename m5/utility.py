@@ -6,30 +6,7 @@ from zipfile import (
 import numpy as np
 import pandas as pd
 
-calendar_dtypes = {
-    'event_name_1': 'string',
-    'event_name_2': 'string',
-    'event_type_1': 'string',
-    'event_type_2': 'string',
-    'month': 'category',
-    'snap_CA': 'bool',
-    'snap_TX': 'bool',
-    'snap_WI': 'bool',
-    'wday': 'category',
-    'year': 'category',
-}
-
-sales_data_dtypes = {
-    'id': 'string',
-    **{column: 'category' for column in (
-        'item_id',
-        'dept_id',
-        'cat_id',
-        'store_id',
-        'state_id',
-    )},
-    **{f'd_{i}': 'int16' for i in range(1, 1942)},
-}
+import config
 
 
 def read_arrays(path, *args):
@@ -39,7 +16,7 @@ def read_arrays(path, *args):
 
 
 def read_calendar(path):
-    calendar = pd.read_csv(path, dtype=calendar_dtypes, usecols=calendar_dtypes)
+    calendar = pd.read_csv(path, dtype=config.calendar_dtypes, usecols=config.calendar_dtypes)
 
     event_names = set(
         pd.unique(calendar[['event_name_1', 'event_name_2']].values.ravel()),
@@ -57,7 +34,7 @@ def read_calendar(path):
 
 
 def read_sales_data(path):
-    return pd.read_csv(path, dtype=sales_data_dtypes)
+    return pd.read_csv(path, dtype=config.sales_data_dtypes)
 
 
 def save_arrays(path, **kwargs):
