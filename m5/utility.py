@@ -32,6 +32,12 @@ sales_data_dtypes = {
 }
 
 
+def read_arrays(path, *args):
+    with ZipFile(path) as zip_file, \
+            zip_file.open('data.npz') as npz_file:
+        return dict(np.load(npz_file))
+
+
 def read_calendar(path):
     calendar = pd.read_csv(path, dtype=calendar_dtypes, usecols=calendar_dtypes)
 
