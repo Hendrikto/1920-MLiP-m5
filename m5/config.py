@@ -57,3 +57,4 @@ feature_index = dict(zip(feature_names, range(len(feature_names))))
 input_path = Path('/kaggle/input')
 data_path = input_path / 'team-captain-m5-accuracy-data-preparation'
 m5_path = input_path / 'm5-forecasting-accuracy'
+model_path = input_path / 'team-captain-m5-accuracy-model-training'
