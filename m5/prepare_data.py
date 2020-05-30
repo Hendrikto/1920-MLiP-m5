@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 import config
 
@@ -27,3 +28,23 @@ def generate_data(sales_data, calendar, dtype='float32'):
         data[:, config.feature_index[column_name]] = np.repeat(values, n_products)
 
     return data
+
+
+def generate_data_frame(sales_data, calendar):
+    n_days = int(sales_data.columns[-1].split('_')[1])
+    n_products = len(sales_data)
+
+    data = {}
+
+    data['day'] = np.repeat(np.arange(1, n_days + 1, dtype='int16'), n_products)
+    data['sales'] = pd.concat(
+        (sales_data[f'd_{i}'] for i in range(1, n_days + 1)),
+        copy=False,
+        ignore_index=True,
+    )
+    for column_name, column in sales_data.loc[:, 'item_id':'state_id'].items():
+        data[column_name] = pd.concat((column,) * n_days, copy=False, ignore_index=True)
+    for column_name, column in calendar.loc[:n_days - 1, 'wday':'snap_WI'].items():
+        data[column_name] = column.repeat(n_products).reset_index(drop=True)
+
+    return pd.DataFrame(data)
