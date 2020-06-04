@@ -48,3 +48,31 @@ def generate_data_frame(sales_data, calendar):
         data[column_name] = column.repeat(n_products).reset_index(drop=True)
 
     return pd.DataFrame(data)
+
+
+def generate_prediction_data(sales_data, calendar, days):
+    """
+    Generate prediction data.
+
+    :param sales_data: dataframe containing sales information
+    :param calendar: dataframe with calendar information
+    :param days: 0-based range of days to predict
+
+    :returns: array with generated prediction data
+    """
+    n_days = len(days)
+    n_features = len(config.feature_names) - 1
+    n_products = len(sales_data)
+
+    data = np.empty((n_days * n_products, n_features), dtype='int16')
+    data[:, config.feature_index['day']] = np.repeat(days, n_products) + 1  # sales_data is 1-based
+    for column_name, column in calendar.loc[days].items():
+        if column.dtype == 'bool':
+            values = column
+        else:
+            values = column.cat.codes
+        data[:, config.feature_index[column_name]] = np.repeat(values, n_products)
+    for column_name, column in sales_data.loc[:, 'item_id':'state_id'].items():
+        data[:, config.feature_index[column_name]] = np.tile(column.cat.codes, n_days)
+
+    return data
