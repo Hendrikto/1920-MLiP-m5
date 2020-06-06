@@ -35,6 +35,12 @@ def read_calendar(path):
     return calendar
 
 
+def read_prices(path):
+    prices = pd.read_csv(path, dtype=config.prices_dtypes)
+    prices.sell_price = (prices.sell_price * 100).astype('int16')  # convert to cents
+    return prices
+
+
 def read_sales_data(path):
     return pd.read_csv(path, dtype=config.sales_data_dtypes)
 
