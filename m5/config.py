@@ -13,6 +13,12 @@ calendar_dtypes = {
     'wday': 'category',
     'year': 'category',
 }
+prices_dtypes = {
+    'item_id': 'category',
+    'sell_price': 'float32',
+    'store_id': 'category',
+    'wm_yr_wk': 'int16',
+}
 sales_data_dtypes = {
     'id': 'string',
     **{column: 'category' for column in (
