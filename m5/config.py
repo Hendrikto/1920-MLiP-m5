@@ -11,6 +11,7 @@ calendar_dtypes = {
     'snap_TX': 'bool',
     'snap_WI': 'bool',
     'wday': 'category',
+    'wm_yr_wk': 'int16',
     'year': 'category',
 }
 prices_dtypes = {
