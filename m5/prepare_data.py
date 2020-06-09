@@ -4,6 +4,16 @@ import pandas as pd
 import config
 
 
+def cat2int(data_frame):
+    for column_name, column in data_frame.items():
+        t = column.dtype
+        if t.name == 'category':
+            column = column.cat.codes
+        elif t.name == 'bool':
+            column = column.astype('int8')
+        data_frame[column_name] = column
+
+
 def generate_data(sales_data, calendar, dtype='float32'):
     n_days = int(sales_data.columns[-1].split('_')[1])
     n_features = len(config.feature_index)
