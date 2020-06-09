@@ -30,7 +30,7 @@ def generate_data(sales_data, calendar, dtype='float32'):
     return data
 
 
-def generate_data_frame(sales_data, calendar):
+def generate_data_frame(sales_data, calendar, prices):
     n_days = int(sales_data.columns[-1].split('_')[1])
     n_products = len(sales_data)
 
@@ -44,10 +44,17 @@ def generate_data_frame(sales_data, calendar):
     )
     for column_name, column in sales_data.loc[:, 'item_id':'state_id'].items():
         data[column_name] = pd.concat((column,) * n_days, copy=False, ignore_index=True)
-    for column_name, column in calendar.loc[:n_days - 1, 'wday':'snap_WI'].items():
+    for column_name, column in calendar.loc[:n_days - 1, 'wm_yr_wk':'snap_WI'].items():
         data[column_name] = column.repeat(n_products).reset_index(drop=True)
+    data['wm_yr_wk'] = calendar.wm_yr_wk[:n_days].repeat(n_products).reset_index(drop=True)
 
-    return pd.DataFrame(data)
+    data = pd.DataFrame(data)
+
+    data = data.merge(prices, how='left', on=['item_id', 'store_id', 'wm_yr_wk'])
+    data.sell_price = data.sell_price.astype('float32')
+    data.drop(columns=('wm_yr_wk'), inplace=True)
+
+    return data
 
 
 def generate_prediction_data(sales_data, calendar, days):
