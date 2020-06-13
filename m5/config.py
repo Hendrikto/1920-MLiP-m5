@@ -52,6 +52,7 @@ feature_names_categorical = (
 )
 feature_names_numerical = (
     'day',
+    'sell_price',
 )
 feature_names = (
     *feature_names_numerical,
