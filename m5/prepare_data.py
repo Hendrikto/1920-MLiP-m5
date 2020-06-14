@@ -1,7 +1,23 @@
 import numpy as np
 import pandas as pd
+from tqdm.notebook import tqdm
 
 import config
+
+
+def calculate_rolling_mean(data, n_products, window_size=28):
+    column = f'rmean{window_size}_sales'
+    data[column] = float('nan')
+    for i in tqdm(range(n_products), desc=f'window size = {window_size}'):
+        data[column][window_size * n_products + i::n_products] = (
+            data
+            .sales  # select column
+            [i::n_products]  # select rows
+            .rolling(window_size, min_periods=1)
+            .mean()
+            [:-window_size]  # discard future data
+            .values  # discard index
+        )
 
 
 def cat2int(data_frame):
