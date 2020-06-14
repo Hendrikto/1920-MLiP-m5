@@ -52,6 +52,9 @@ feature_names_categorical = (
 )
 feature_names_numerical = (
     'day',
+    'rmean7_sales',
+    'rmean14_sales',
+    'rmean28_sales',
     'sell_price',
 )
 feature_names = (
